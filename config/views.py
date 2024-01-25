@@ -10,6 +10,7 @@ import pandas as pd
 def main(request):
     # return HttpResponse("안녕하세요, pyburger입니다.") # 이 코드를 HTML로 처리
     return render(request, "main.html")
+
 #p.48
 def burger_list(request):
     # burgers = Burger.objects.all() # DB에서 정보를 가져옴
@@ -25,3 +26,22 @@ def burger_list(request):
     }
 
     return render(request, "burger_list.html", context)
+
+def burger_search(request):
+    # print(request.GET)
+    keyword = request.GET.get("keyword")
+    # print(keyword)
+    
+    # keyword가 주어졌을 때와 그렇지 않을 때 조건문
+    if keyword is not None: # 키워드가 주어지면,
+        burgers = Burger.objects.filter(name__contains=keyword) # DB에서 데이터 가져오는 작업
+    # print(burgers)
+    else: # 키워드가 주어지지 않으면
+        burgers = Burger.objects.none()
+        
+    # 결과값을 HTML로 데이터 전달해주기
+    context = {
+        "burgers" : burgers
+    }
+
+    return render(request, "burger_search.html", context = context)
